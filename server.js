@@ -18,7 +18,7 @@ app.listen(PORT, function(){
 });
 
 // get homepage
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
@@ -35,12 +35,11 @@ app.get('/api/notes', (req, res) => {
 // post method to add new notes
 app.post('/api/notes', (req, res) => {
     fs.readFile(path.join(__dirname, './db/db.json'), (err, data) => {
-        if (err) throw err;
-        const notes = JSON.parse(data); 
         const newNote = req.body;
 
-        notes.push(newNote);
-        
-    })
-})
+        res.json(newNote);
+
+        if (err) throw err;
+    });
+});
     
