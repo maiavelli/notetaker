@@ -43,3 +43,21 @@ app.post('/api/notes', (req, res) => {
     });
 });
     
+app.delete('/api/notes/:id', (req, res) => {
+    const noteID = req.params.id;
+
+    fs.readFile(path.join(__dirname, "./db/db.json"), (err, data) => {
+        
+        if (err) throw err;
+
+        const notes = JSON.parse(data);
+        const notesArr = notes.filter( item => {
+            return item.id !==  noteID
+        });
+
+        fs.writeFile('./db/db.json', JSON.stringify(notesArray), (err, data) => {
+            if (err) throw err;
+            res.json(notesArr)
+        });
+    });
+});
