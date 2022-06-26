@@ -4,6 +4,9 @@ const path = require('path');
 const fs = require('fs');
 const database = require('./db/db');
 
+// import js file that generates random ID for note
+const uuid = require('./public/assets/js/uuid');
+
 // set up express app
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -38,6 +41,7 @@ app.route('/api/notes')
     .post(function (req, res) {
         const jsonPath = path.join(__dirname, '/db/db.json');
         const newNote = req.body;
+        newNote.id = uuid();
         database.push(newNote)
         fs.writeFile(jsonPath, JSON.stringify(database), function (err) {
 
