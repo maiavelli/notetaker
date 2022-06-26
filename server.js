@@ -8,16 +8,16 @@ const database = require('./db/db');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-//middleware
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+// link to assets
 app.use(express.static('public'));
 
-app.listen(PORT, function(){
-    console.log('app listening on PORT: ' + PORT)
-});
+//set up data parsing 
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
-// get homepage
+
+
+// on page load, get homepage
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/index.html'));
 });
@@ -27,30 +27,28 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
-// render existing notes to page
-app.get('/api/notes', (req, res) => {
-    fs.readFile('./db/db.json', (err, data) => {
-        const newNote = JSON.parse(data)
-        res.json(newNote)
-        if (err) throw err;
-    });
-});
+// get and post functions for notes page
+app.route('/api/notes')
+    // get the notes list
+    .get(function (req, res) {
+        res.json(database);
+    })
 
-// post method to add new notes
-app.post('/api/notes', (req, res) => {
-    fs.readFile(path.join(__dirname, './db/db.json'), (err, data) => {
-        const notes = JSON.parse(data);
+    //add new notes to json file
+    .post(function (req, res) {
+        let jsonPath = path.join(__dirname, "/db/db.json");
         const newNote = req.body;
-        notes.push(newNote);
+        database.push(newNote)
+        fs.writeFile(jsonPath, JSON.stringify(database), function (err) {
 
-        const writeNote = JSON.stringify(notes);
-        fs.writeFile(path.join(__dirname, "./db/db.json"), writeNote, (err) => {
-            if (err) throw err;
-            res.json(notes);
-        })
+            if (err) {
+                return console.log(err);
+            }
+            console.log('Your note was saved!');
+        });
+        res.json(newNote);
     });
-});
-    
+
 app.delete('/api/notes/:id', (req, res) => {
     const noteID = req.params.id;
 
@@ -68,4 +66,9 @@ app.delete('/api/notes/:id', (req, res) => {
             res.json(notesArr)
         });
     });
+});
+
+// listen for port and console log once it's started
+app.listen(PORT, function(){
+    console.log('app listening on PORT: ' + PORT)
 });
