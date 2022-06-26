@@ -59,21 +59,25 @@ app.delete('/api/notes/:id', (req, res) => {
     const jsonPath = path.join(__dirname, '/db/db.json');
     const noteID = req.params.id;
 
-    fs.readFile((jsonPath), (err, data) => {
-        if (err) throw err;
+    for (let i = 0; i < database.length; i++) {
 
-        const notes = JSON.parse(data);
-        const notesArr = notes.filter(item => {
-            return item.id !== noteID
-        });
-    })
+        if (database[i].id == noteID) {
+            // Splice takes i position, and then deletes the 1 note.
+            database.splice(i, 1);
+            break;
+        }
+    }
+    // Write the db.json file again.
+    fs.writeFileSync(jsonFilePath, JSON.stringify(database), function (err) {
 
-    fs.writeFile(jsonPath, JSON.stringify(notesArr), (err, data) => {
-    
-        if (err) throw err;
-        res.json(notesArr);
+        if (err) {
+            return console.log(err);
+        } else {
+            console.log("Your note was deleted!");
+        }
     });
-});
+    res.json(database);
+    });
 
 // listen for port and console log once it's started
 app.listen(PORT, function(){
