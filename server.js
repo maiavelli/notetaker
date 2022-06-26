@@ -57,7 +57,7 @@ app.delete('/api/notes/:id', (req, res) => {
 
     for (let i = 0; i < database.length; i++) {
 
-        if (database[i].id == noteID {
+        if (database[i].id == noteID) {
 
             database.splice(i, 1);
             break;
@@ -65,14 +65,14 @@ app.delete('/api/notes/:id', (req, res) => {
     }
 
     fs.writeFileSync(jsonPath, JSON.stringify(database), function (err) {
-        
+    
         if (err) {
             return console.log(err);
         } else {
             console.log("your note was deleted!");
         }
-    })
-        });
+    });
+});
 
 // listen for port and console log once it's started
 app.listen(PORT, function(){
