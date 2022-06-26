@@ -18,13 +18,13 @@ app.use(express.urlencoded({extended: true}));
 
 
 // on page load, get homepage
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
 // get notes page
 app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, "/public/notes.html"));
+    res.sendFile(path.join(__dirname, '/public/notes.html'));
 });
 
 // get and post functions for notes page
@@ -36,7 +36,7 @@ app.route('/api/notes')
 
     //add new notes to json file
     .post(function (req, res) {
-        let jsonPath = path.join(__dirname, "/db/db.json");
+        let jsonPath = path.join(__dirname, '/db/db.json');
         const newNote = req.body;
         database.push(newNote)
         fs.writeFile(jsonPath, JSON.stringify(database), function (err) {
