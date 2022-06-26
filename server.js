@@ -29,17 +29,24 @@ app.get('/notes', (req, res) => {
 
 // render existing notes to page
 app.get('/api/notes', (req, res) => {
-    res.json(database);
+    fs.readFile('./db/db.json', (err, data) => {
+        const newNote = JSON.parse(data)
+        res.json(newNote)
+        if (err) throw err;
 });
 
 // post method to add new notes
 app.post('/api/notes', (req, res) => {
     fs.readFile(path.join(__dirname, './db/db.json'), (err, data) => {
+        const notes = JSON.parse(data);
         const newNote = req.body;
+        notes.push(newNote);
 
-        res.json(newNote);
-
-        if (err) throw err;
+        const writeNote = JSON.stringify(notes);
+        fs.writeFile(path.join(__dirname, "./db/db.json"), writeNote, (err) => {
+            if (err) throw err;
+            res.json(notes);
+        })
     });
 });
     
@@ -47,7 +54,7 @@ app.delete('/api/notes/:id', (req, res) => {
     const noteID = req.params.id;
 
     fs.readFile(path.join(__dirname, "./db/db.json"), (err, data) => {
-        
+
         if (err) throw err;
 
         const notes = JSON.parse(data);
