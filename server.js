@@ -59,22 +59,19 @@ app.delete('/api/notes/:id', (req, res) => {
     const jsonPath = path.join(__dirname, '/db/db.json');
     const noteID = req.params.id;
 
-    for (let i = 0; i < database.length; i++) {
+    fs.readFile((jsonPath), (err, data) => {
+        if (err) throw err;
 
-        if (database[i].id == noteID) {
+        const notes = JSON.parse(data);
+        const notesArr = notes.filter(item => {
+            return item.id !== noteID
+        });
+    })
 
-            database.splice(i, 1);
-            break;
-        }
-    }
-
-    fs.writeFileSync(jsonPath, JSON.stringify(database), function (err) {
+    fs.writeFile(jsonPath, JSON.stringify(notesArr), (err, data) => {
     
-        if (err) {
-            return console.log(err);
-        } else {
-            console.log("your note was deleted!");
-        }
+        if (err) throw err;
+        res.json(notesArr);
     });
 });
 
