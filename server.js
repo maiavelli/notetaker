@@ -34,9 +34,9 @@ app.route('/api/notes')
         res.json(database);
     })
 
-    //add new notes to json file
+    // add new notes to json file
     .post(function (req, res) {
-        let jsonPath = path.join(__dirname, '/db/db.json');
+        const jsonPath = path.join(__dirname, '/db/db.json');
         const newNote = req.body;
         database.push(newNote)
         fs.writeFile(jsonPath, JSON.stringify(database), function (err) {
@@ -44,29 +44,35 @@ app.route('/api/notes')
             if (err) {
                 return console.log(err);
             }
-            console.log('Your note was saved!');
+            console.log('your note was saved!');
         });
         res.json(newNote);
     });
 
+
+// delete notes from json and rewrite file
 app.delete('/api/notes/:id', (req, res) => {
+    const jsonPath = path.join(__dirname, '/db/db.json');
     const noteID = req.params.id;
 
-    fs.readFile(path.join(__dirname, "./db/db.json"), (err, data) => {
+    for (let i = 0; i < database.length; i++) {
 
-        if (err) throw err;
+        if (database[i].id == noteID {
 
-        const notes = JSON.parse(data);
-        const notesArr = notes.filter( item => {
-            return item.id !==  noteID
+            database.splice(i, 1);
+            break;
+        }
+    }
+
+    fs.writeFileSync(jsonPath, JSON.stringify(database), function (err) {
+        
+        if (err) {
+            return console.log(err);
+        } else {
+            console.log("your note was deleted!");
+        }
+    })
         });
-
-        fs.writeFile('./db/db.json', JSON.stringify(notesArray), (err, data) => {
-            if (err) throw err;
-            res.json(notesArr)
-        });
-    });
-});
 
 // listen for port and console log once it's started
 app.listen(PORT, function(){
