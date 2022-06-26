@@ -33,6 +33,7 @@ app.get('/api/notes', (req, res) => {
         const newNote = JSON.parse(data)
         res.json(newNote)
         if (err) throw err;
+    });
 });
 
 // post method to add new notes
