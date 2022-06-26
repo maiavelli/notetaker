@@ -11,7 +11,7 @@ My motivation when creating this project was to get familiar with express.js met
 To use this application, all you have to do is navigate to this webpage: https://maiavelli-notetaker.herokuapp.com/. Once there click 'Get Started' and you will be brought to a page where you can enter your notes and save them using the save button. Once a task is completed or a note is no longer needed, you can delete the note with the delete button.
 
 ## Demo
-![demo-vid](./assets/notetaker.gif)
+![demo-vid](./Assets/notetaker.gif)
 
 ## Questions
 For more information and to see more of my work, please visit my [GitHub](https://github.com/maiavelli/).
